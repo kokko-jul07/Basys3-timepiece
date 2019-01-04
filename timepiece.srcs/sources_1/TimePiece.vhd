@@ -32,8 +32,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity TimePiece is
-    Port ( CLK : in STD_LOGIC;
-           RST : in STD_LOGIC);
+    port ( CLK : in STD_LOGIC;
+           RST : in STD_LOGIC;
+           LED : out STD_LOGIC_VECTOR(7 downto 0)
+           );
 end TimePiece;
 
 architecture RTL of TimePiece is
