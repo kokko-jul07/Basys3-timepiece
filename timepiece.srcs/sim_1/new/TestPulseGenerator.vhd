@@ -40,7 +40,7 @@ architecture SIM of TestPulseGenerator is
     constant timing : INTEGER := 10;
     signal clk : STD_LOGIC := '0';
     signal rst : STD_LOGIC;
-    signal pulse : STD_LOGIC;
+    signal pulse : STD_LOGIC := '0';
     component PulseGenerator is
         generic ( TIMING : INTEGER := 0 ); 
         port ( CLK : in STD_LOGIC;

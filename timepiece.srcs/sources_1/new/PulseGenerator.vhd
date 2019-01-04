@@ -42,22 +42,28 @@ end PulseGenerator;
 architecture RTL of PulseGenerator is
     signal counter : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 begin
-    process
+    process ( RST, CLK )
     begin
-        if ( RST = '1' ) then
+        if ( RST = '0' ) then
             counter <= (others => '0');
         elsif ( CLK'event and CLK = '1' ) then
-            counter <= counter + '1';
+            if ( counter = TIMING-1 ) then
+                counter <= (others => '0');
+            else
+                counter <= counter + '1';
+            end if;
         end if;
     end process;
 
-    process
+    process ( RST, CLK )
     begin
-        if ( RST = '1' ) then
+        if ( RST = '0' ) then
             PULSE <= '0';
         elsif ( CLK'event and CLK = '1' ) then
-            if ( counter = TIMING ) then
+            if ( counter = TIMING-1 ) then
                 PULSE <= '1';
+            else
+                PULSE <= '0';
             end if;
         end if;
     end process;
