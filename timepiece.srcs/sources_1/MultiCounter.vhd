@@ -42,11 +42,11 @@ entity MultiCounter is
 end MultiCounter;
 
 architecture RTL of MultiCounter is
-signal cnt : STD_LOGIC_VECTOR (7 downto 0);
+signal cnt : STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
 begin
     process ( CLK, RST )
     begin
-        if ( RST = '0' ) then
+        if ( RST = '1' ) then
             cnt <= (others => '0');
         elsif ( CLK'event and CLK = '1' ) then
             if ( ENABLE = '1' ) then
@@ -62,7 +62,7 @@ begin
 
     process ( CLK, RST )
     begin
-        if ( RST = '0' ) then
+        if ( RST = '1' ) then
             CARRY <= '0';
         elsif ( CLK'event and CLK = '1' ) then
             if ( cnt = NUMBER-1 ) then

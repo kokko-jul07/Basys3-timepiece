@@ -77,7 +77,7 @@ begin
     d7s : Decode7Seg
             port map ( CLK => CLK, RST => RST, NUM => num, SEG => SEG );
     pg1s : PulseGenerator
-            generic map ( TIMING => 100000000 )
+            generic map ( TIMING => 10000000 )
             port map ( CLK => CLK, RST => RST, PULSE => carrysec );
     pg1khz : PulseGenerator
             generic map ( TIMING => 100000 )
@@ -97,7 +97,7 @@ begin
 
     process ( CLK, RST )
     begin
-        if ( RST = '0' ) then
+        if ( RST = '1' ) then
             switch <= (others => '0');
         elsif ( CLK'event and CLK = '1' ) then
             if ( khz = '1' ) then
@@ -109,48 +109,48 @@ begin
     -- 7seg LED dynamic control
     process ( CLK, RST )
     begin
-        if ( RST = '0' ) then
-            SEG <= "1111111";
+        if ( RST = '1' ) then
+            num <= (others => '0');
         elsif ( CLK'event and CLK = '1' ) then
             case switch is
                 when "00" =>
-                    SEG <= min1(6 downto 0);
+                    num <= min1(3 downto 0);
                     AN <= "1110";
                 when "01" =>
-                    SEG <= min2(6 downto 0);
+                    num <= min2(3 downto 0);
                     AN <= "1101";
                 when "10" =>
                     case hour is
-                        when X"00" => SEG <= "1000000"; when X"01" => SEG <= "1111001";
-                        when X"02" => SEG <= "0100100"; when X"03" => SEG <= "0110000";
-                        when X"04" => SEG <= "0011001"; when X"05" => SEG <= "0010010";
-                        when X"06" => SEG <= "0000010"; when X"07" => SEG <= "1111000";
-                        when X"08" => SEG <= "0000000"; when X"09" => SEG <= "0010000";
-                        when X"0A" => SEG <= "1000000"; when X"0B" => SEG <= "1111001";
-                        when X"0C" => SEG <= "0100100"; when X"0D" => SEG <= "0110000";
-                        when X"0E" => SEG <= "0011001"; when X"0F" => SEG <= "0010010";
-                        when X"10" => SEG <= "0000010"; when X"11" => SEG <= "1111000";
-                        when X"12" => SEG <= "0000000"; when X"13" => SEG <= "0010000";
-                        when X"14" => SEG <= "1000000"; when X"15" => SEG <= "1111001";
-                        when X"16" => SEG <= "0100100"; when X"17" => SEG <= "0110000";
-                        when others => SEG <= "11111111";
+                        when X"00" => num <= X"0"; when X"01" => num <= X"1";
+                        when X"02" => num <= X"2"; when X"03" => num <= X"3";
+                        when X"04" => num <= X"4"; when X"05" => num <= X"5";
+                        when X"06" => num <= X"6"; when X"07" => num <= X"7";
+                        when X"08" => num <= X"8"; when X"09" => num <= X"9";
+                        when X"0A" => num <= X"0"; when X"0B" => num <= X"1";
+                        when X"0C" => num <= X"2"; when X"0D" => num <= X"3";
+                        when X"0E" => num <= X"4"; when X"0F" => num <= X"5";
+                        when X"10" => num <= X"6"; when X"11" => num <= X"7";
+                        when X"12" => num <= X"8"; when X"13" => num <= X"9";
+                        when X"14" => num <= X"0"; when X"15" => num <= X"1";
+                        when X"16" => num <= X"2"; when X"17" => num <= X"3";
+                        when others => num <= X"0";
                     end case;
                     AN <= "1011";
                 when "11" =>
                     case hour is
-                        when X"00" => SEG <= "1000000"; when X"01" => SEG <= "1000000";
-                        when X"02" => SEG <= "1000000"; when X"03" => SEG <= "1000000";
-                        when X"04" => SEG <= "1000000"; when X"05" => SEG <= "1000000";
-                        when X"06" => SEG <= "1000000"; when X"07" => SEG <= "1000000";
-                        when X"08" => SEG <= "1000000"; when X"09" => SEG <= "1000000";
-                        when X"0A" => SEG <= "1111001"; when X"0B" => SEG <= "1111001";
-                        when X"0C" => SEG <= "1111001"; when X"0D" => SEG <= "1111001";
-                        when X"0E" => SEG <= "1111001"; when X"0F" => SEG <= "1111001";
-                        when X"10" => SEG <= "1111001"; when X"11" => SEG <= "1111001";
-                        when X"12" => SEG <= "1111001"; when X"13" => SEG <= "1111001";
-                        when X"14" => SEG <= "0100100"; when X"15" => SEG <= "0100100";
-                        when X"16" => SEG <= "0100100"; when X"17" => SEG <= "0100100";
-                        when others => SEG <= "11111111";
+                        when X"00" => num <= X"0"; when X"01" => num <= X"0";
+                        when X"02" => num <= X"0"; when X"03" => num <= X"0";
+                        when X"04" => num <= X"0"; when X"05" => num <= X"0";
+                        when X"06" => num <= X"0"; when X"07" => num <= X"0";
+                        when X"08" => num <= X"0"; when X"09" => num <= X"0";
+                        when X"0A" => num <= X"1"; when X"0B" => num <= X"1";
+                        when X"0C" => num <= X"1"; when X"0D" => num <= X"";
+                        when X"0E" => num <= X"1"; when X"0F" => num <= X"";
+                        when X"10" => num <= X"1"; when X"11" => num <= X"";
+                        when X"12" => num <= X"1"; when X"13" => num <= X"";
+                        when X"14" => num <= X""; when X"15" => num <= X"";
+                        when X"16" => num <= X""; when X"17" => num <= X"";
+                        when others => num <= X"0";
                     end case;
                     AN <= "0111";
                 when others =>

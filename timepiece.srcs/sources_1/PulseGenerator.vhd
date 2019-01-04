@@ -44,7 +44,7 @@ architecture RTL of PulseGenerator is
 begin
     process ( RST, CLK )
     begin
-        if ( RST = '0' ) then
+        if ( RST = '1' ) then
             counter <= (others => '0');
         elsif ( CLK'event and CLK = '1' ) then
             if ( counter = TIMING-1 ) then
@@ -57,7 +57,7 @@ begin
 
     process ( RST, CLK )
     begin
-        if ( RST = '0' ) then
+        if ( RST = '1' ) then
             PULSE <= '0';
         elsif ( CLK'event and CLK = '1' ) then
             if ( counter = TIMING-1 ) then
