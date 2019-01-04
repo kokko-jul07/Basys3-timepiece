@@ -43,18 +43,18 @@
   <FileSets Version="1" Minor="31">
     <FileSet Name="sources_1" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
       <Filter Type="Srcs"/>
-      <File Path="$PSRCDIR/sources_1/imports/new/PulseGenerator.vhd">
+      <File Path="$PSRCDIR/sources_1/PulseGenerator.vhd">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PSRCDIR/sources_1/new/PulseGenerator.vhd"/>
+          <Attr Name="ImportPath" Val="$PSRCDIR/sources_1/PulseGenerator.vhd"/>
           <Attr Name="ImportTime" Val="1546479449"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/new/TimePiece.vhd">
+      <File Path="$PSRCDIR/sources_1/TimePiece.vhd">
         <FileInfo>
           <Attr Name="AutoDisabled" Val="1"/>
-          <Attr Name="ImportPath" Val="$PSRCDIR/sources_1/new/TimePiece.vhd"/>
+          <Attr Name="ImportPath" Val="$PSRCDIR/sources_1/TimePiece.vhd"/>
           <Attr Name="ImportTime" Val="1546475739"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -68,7 +68,7 @@
     </FileSet>
     <FileSet Name="constrs_1" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
       <Filter Type="Constrs"/>
-      <File Path="$PSRCDIR/constrs_1/imports/Desktop/Basys3.xdc">
+      <File Path="$PSRCDIR/constrs_1/Basys3.xdc">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -80,9 +80,9 @@
     </FileSet>
     <FileSet Name="sim_1" Type="SimulationSrcs" RelSrcDir="$PSRCDIR/sim_1">
       <Filter Type="Srcs"/>
-      <File Path="$PSRCDIR/sim_1/imports/new/TestPulseGenerator.vhd">
+      <File Path="$PSRCDIR/sim_1/TestPulseGenerator.vhd">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PSRCDIR/sim_1/new/TestPulseGenerator.vhd"/>
+          <Attr Name="ImportPath" Val="$PSRCDIR/sim_1/TestPulseGenerator.vhd"/>
           <Attr Name="ImportTime" Val="1546479865"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
