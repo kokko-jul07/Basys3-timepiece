@@ -37,25 +37,27 @@ entity MultiCounter is
     port ( CLK : in STD_LOGIC;
            RST : in STD_LOGIC;
            ENABLE : in STD_LOGIC;
-           COUNT : inout STD_LOGIC_VECTOR (7 downto 0);
+           COUNT : out STD_LOGIC_VECTOR (7 downto 0);
            CARRY : out STD_LOGIC);
 end MultiCounter;
 
 architecture RTL of MultiCounter is
+signal cnt : STD_LOGIC_VECTOR (7 downto 0);
 begin
     process ( CLK, RST )
     begin
         if ( RST = '0' ) then
-            COUNT <= (others => '0');
+            cnt <= (others => '0');
         elsif ( CLK'event and CLK = '1' ) then
             if ( ENABLE = '1' ) then
-                if ( COUNT = NUMBER-1 ) then
-                    COUNT <= (others => '0');
+                if ( cnt = NUMBER-1 ) then
+                    cnt <= (others => '0');
                 else
-                    COUNT <= COUNT + '1';
+                    cnt <= cnt + '1';
                 end if;
             end if;
         end if;
+        COUNT <= cnt;
     end process;
 
     process ( CLK, RST )
@@ -63,7 +65,7 @@ begin
         if ( RST = '0' ) then
             CARRY <= '0';
         elsif ( CLK'event and CLK = '1' ) then
-            if ( COUNT = NUMBER-1 ) then
+            if ( cnt = NUMBER-1 ) then
                 CARRY <= '1';
             else
                 CARRY <= '0';

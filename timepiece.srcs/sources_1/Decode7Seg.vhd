@@ -34,7 +34,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity Decode7Seg is
     Port ( CLK : in STD_LOGIC;
            RST : in STD_LOGIC;
-           HEX : in STD_LOGIC_VECTOR (3 downto 0);
+           NUM : in STD_LOGIC_VECTOR (3 downto 0);
            SEG : out STD_LOGIC_VECTOR (6 downto 0));
 end Decode7Seg;
 
@@ -46,7 +46,7 @@ begin
         if ( RST = '1' ) then
             SEG <= "1111111";
         elsif ( CLK'event and CLK = '1' ) then
-            case HEX is
+            case NUM is
                 when X"0" => SEG <= "1000000";
                 when X"1" => SEG <= "1111001";
                 when X"2" => SEG <= "0100100";

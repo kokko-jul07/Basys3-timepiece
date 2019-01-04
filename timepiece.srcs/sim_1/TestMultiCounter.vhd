@@ -48,7 +48,7 @@ architecture SIM of TestMultiCounter is
         port ( CLK : in STD_LOGIC;
                RST : in STD_LOGIC;
                ENABLE : in STD_LOGIC;
-               COUNT : inout STD_LOGIC_VECTOR (7 downto 0);
+               COUNT : out STD_LOGIC_VECTOR (7 downto 0);
                CARRY : out STD_LOGIC);
     end component;
 
