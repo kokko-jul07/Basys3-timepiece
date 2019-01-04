@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 2019/01/03 10:06:55
+-- Create Date: 2019/01/04 12:53:16
 -- Design Name: 
--- Module Name: TestPulseGenerator - RTL
+-- Module Name: TestMultiCounter - SIM
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,33 +31,45 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity TestPulseGenerator is
+entity TestMultiCounter is
 --  Port ( );
-end TestPulseGenerator;
+end TestMultiCounter;
 
-architecture SIM of TestPulseGenerator is
+architecture SIM of TestMultiCounter is
     constant cycle : time := 100 ns;
-    constant timing : INTEGER := 10;
+    constant number : INTEGER := 10;
     signal clk : STD_LOGIC := '0';
-    signal rst : STD_LOGIC;
-    signal pulse : STD_LOGIC := '0';
-    component PulseGenerator is
-        generic ( TIMING : INTEGER := 0 ); 
+    signal rst : STD_LOGIC := '0';
+    signal enable : STD_LOGIC := '0';
+    signal count : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
+    signal carry : STD_LOGIC := '0';
+    component MultiCounter is
+        generic ( NUMBER : INTEGER := 10 ); 
         port ( CLK : in STD_LOGIC;
                RST : in STD_LOGIC;
-               PULSE : out STD_LOGIC );
+               ENABLE : in STD_LOGIC;
+               COUNT : inout STD_LOGIC_VECTOR (7 downto 0);
+               CARRY : out STD_LOGIC);
     end component;
+
 begin
-    pg : PulseGenerator
-            generic map ( TIMING => timing )
-            port map ( CLK => clk, RST => rst, PULSE => pulse );
+    mc : MultiCounter
+            generic map ( NUMBER => number )
+            port map ( CLK => clk, RST => rst, ENABLE => enable, COUNT => count, CARRY => carry );
 
     process
     begin
         wait for (cycle/2);
         clk <= not clk;
     end process;
-    
+
+    process ( clk )
+    begin
+        if ( clk'event and clk = '1' ) then
+            enable <= not enable;
+        end if;
+    end process;
+
     process
     begin
         rst <= '0';

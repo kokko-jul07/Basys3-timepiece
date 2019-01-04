@@ -48,10 +48,12 @@ begin
         if ( RST = '0' ) then
             COUNT <= (others => '0');
         elsif ( CLK'event and CLK = '1' ) then
-            if ( COUNT = NUMBER ) then
-                COUNT <= (others => '0');
-            elsif ( ENABLE = '1' ) then
-                COUNT <= COUNT + '1';
+            if ( ENABLE = '1' ) then
+                if ( COUNT = NUMBER-1 ) then
+                    COUNT <= (others => '0');
+                else
+                    COUNT <= COUNT + '1';
+                end if;
             end if;
         end if;
     end process;
@@ -61,7 +63,7 @@ begin
         if ( RST = '0' ) then
             CARRY <= '0';
         elsif ( CLK'event and CLK = '1' ) then
-            if ( COUNT = NUMBER ) then
+            if ( COUNT = NUMBER-1 ) then
                 CARRY <= '1';
             else
                 CARRY <= '0';
