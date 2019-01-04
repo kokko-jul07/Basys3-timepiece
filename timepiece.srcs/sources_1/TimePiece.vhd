@@ -33,6 +33,8 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 --use UNISIM.VComponents.all;
 
 entity TimePiece is
+    generic ( TIMING1 : INTEGER := 100000000; 
+              TIMING2 : INTEGER := 100000 );
     port ( CLK : in STD_LOGIC;
            RST : in STD_LOGIC;
            LED : out STD_LOGIC_VECTOR(7 downto 0);
@@ -63,34 +65,34 @@ architecture RTL of TimePiece is
                CARRY : out STD_LOGIC);
     end component;
     signal num : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
-    signal khz : STD_LOGIC := '0';
     signal carrysec : STD_LOGIC := '0';
-    signal carrymin1 : STD_LOGIC := '0';
-    signal carrymin2 : STD_LOGIC := '0';
+    signal carry1khz : STD_LOGIC := '0';
+    signal carrymin01 : STD_LOGIC := '0';
+    signal carrymin10 : STD_LOGIC := '0';
     signal carryhour : STD_LOGIC := '0';
     signal carryday : STD_LOGIC := '0';
-    signal min1 : STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
-    signal min2 : STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
+    signal min01 : STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
+    signal min10 : STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
     signal hour : STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
-    signal switch : STD_LOGIC_VECTOR (1 downto 0) := (others => '0');
+    signal ledsw : STD_LOGIC_VECTOR (1 downto 0) := (others => '0');
 begin
     d7s : Decode7Seg
             port map ( CLK => CLK, RST => RST, NUM => num, SEG => SEG );
     pg1s : PulseGenerator
-            generic map ( TIMING => 10000000 )
+            generic map ( TIMING => TIMING1 )
             port map ( CLK => CLK, RST => RST, PULSE => carrysec );
     pg1khz : PulseGenerator
-            generic map ( TIMING => 100000 )
-            port map ( CLK => CLK, RST => RST, PULSE => khz );
+            generic map ( TIMING => TIMING2 )
+            port map ( CLK => CLK, RST => RST, PULSE => carry1khz );
     mc60 : MultiCounter
             generic map ( NUMBER => 60 )
-            port map ( CLK => CLK, RST => RST, ENABLE => carrysec, COUNT => LED, CARRY => carrymin1 );
-    mcmin1 : MultiCounter
+            port map ( CLK => CLK, RST => RST, ENABLE => carrysec, COUNT => LED, CARRY => carrymin01 );
+    mcmin01 : MultiCounter
             generic map ( NUMBER => 10 )
-            port map ( CLK => CLK, RST => RST, ENABLE => carrymin1, COUNT => min1, CARRY => carrymin2 );
-    mcmin2 : MultiCounter
-            generic map ( NUMBER => 6 )
-            port map ( CLK => CLK, RST => RST, ENABLE => carrymin2, COUNT => min2, CARRY => carryhour );
+            port map ( CLK => CLK, RST => RST, ENABLE => carrymin01, COUNT => min01, CARRY => carrymin10 );
+    mcmin10 : MultiCounter
+            generic map ( NUMBER =>  6 )
+            port map ( CLK => CLK, RST => RST, ENABLE => carrymin10, COUNT => min10, CARRY => carryhour );
     mchour : MultiCounter
             generic map ( NUMBER => 24 )
             port map ( CLK => CLK, RST => RST, ENABLE => carryhour, COUNT => hour, CARRY => carryday );
@@ -98,28 +100,22 @@ begin
     process ( CLK, RST )
     begin
         if ( RST = '1' ) then
-            switch <= (others => '0');
+            ledsw <= (others => '0');
         elsif ( CLK'event and CLK = '1' ) then
-            if ( khz = '1' ) then
-                switch <= switch + '1';
+            if ( carry1khz = '1' ) then
+                ledsw <= ledsw + '1';
             end if;
         end if;
     end process;
 
-    -- 7seg LED dynamic control
     process ( CLK, RST )
     begin
         if ( RST = '1' ) then
-            num <= (others => '0');
         elsif ( CLK'event and CLK = '1' ) then
-            case switch is
-                when "00" =>
-                    num <= min1(3 downto 0);
-                    AN <= "1110";
-                when "01" =>
-                    num <= min2(3 downto 0);
-                    AN <= "1101";
-                when "10" =>
+            case ledsw is
+                when "00" => AN <= "1110"; num <= min01(3 downto 0);
+                when "01" => AN <= "1101"; num <= min10(3 downto 0);
+                when "10" => AN <= "1011";
                     case hour is
                         when X"00" => num <= X"0"; when X"01" => num <= X"1";
                         when X"02" => num <= X"2"; when X"03" => num <= X"3";
@@ -135,8 +131,7 @@ begin
                         when X"16" => num <= X"2"; when X"17" => num <= X"3";
                         when others => num <= X"0";
                     end case;
-                    AN <= "1011";
-                when "11" =>
+                when "11" => AN <= "0111";
                     case hour is
                         when X"00" => num <= X"0"; when X"01" => num <= X"0";
                         when X"02" => num <= X"0"; when X"03" => num <= X"0";
@@ -144,18 +139,15 @@ begin
                         when X"06" => num <= X"0"; when X"07" => num <= X"0";
                         when X"08" => num <= X"0"; when X"09" => num <= X"0";
                         when X"0A" => num <= X"1"; when X"0B" => num <= X"1";
-                        when X"0C" => num <= X"1"; when X"0D" => num <= X"";
-                        when X"0E" => num <= X"1"; when X"0F" => num <= X"";
-                        when X"10" => num <= X"1"; when X"11" => num <= X"";
-                        when X"12" => num <= X"1"; when X"13" => num <= X"";
-                        when X"14" => num <= X""; when X"15" => num <= X"";
-                        when X"16" => num <= X""; when X"17" => num <= X"";
+                        when X"0C" => num <= X"1"; when X"0D" => num <= X"1";
+                        when X"0E" => num <= X"1"; when X"0F" => num <= X"1";
+                        when X"10" => num <= X"1"; when X"11" => num <= X"1";
+                        when X"12" => num <= X"1"; when X"13" => num <= X"1";
+                        when X"14" => num <= X"2"; when X"15" => num <= X"2";
+                        when X"16" => num <= X"2"; when X"17" => num <= X"2";
                         when others => num <= X"0";
                     end case;
-                    AN <= "0111";
-                when others =>
-                    SEG <= "1111111";
-                    AN <= "1111";
+                when others => AN <= "1111"; num <= X"0";
             end case;
         end if;
     end process;

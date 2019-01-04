@@ -57,7 +57,6 @@ begin
                 end if;
             end if;
         end if;
-        COUNT <= cnt;
     end process;
 
     process ( CLK, RST )
@@ -65,12 +64,17 @@ begin
         if ( RST = '1' ) then
             CARRY <= '0';
         elsif ( CLK'event and CLK = '1' ) then
-            if ( cnt = NUMBER-1 ) then
-                CARRY <= '1';
+            if ( ENABLE = '1' ) then
+                if ( cnt = NUMBER-1 ) then
+                    CARRY <= '1';
+                else
+                    CARRY <= '0';
+                end if;
             else
                 CARRY <= '0';
             end if;
         end if;
     end process;
 
+    COUNT <= cnt;
 end RTL;
